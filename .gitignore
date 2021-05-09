@@ -65,7 +65,7 @@ apidoc/
 
 #outputExcel
 # Output of 'export file'
-*_a.xlsx
+docs/How-I-solve-web-scraping-problem.docx
 
 # MAC OS
 *.DS_Store
