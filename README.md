@@ -1,5 +1,7 @@
 # Web Scraper Tools
 
+This project scraping data from ```https://www.tokopedia.com/p/handphone-tablet/handphone``` for example
+
 ## How to run this project on local environment
 1. Download this project from github or pull from git using ```git clone https://github.com/melvin-toni/web-scraper-tools.git``` in command prompt
 2. Make sure **node.js** and **npm** installed on the local environment, otherwise project can't run on local

@@ -11,12 +11,11 @@ exports.main = async (req, res) => {
     
     const url = 'https://www.tokopedia.com/p/handphone-tablet/handphone';
     
-    axios(url).then((response) => {
-        const html = response.data;
-        const $ = cheerio.load(html);
+    dynamicScrolling(url).then((response) => {
+        const $ = cheerio.load(response);
         const parentDiv = $('div.css-13l3l78.e1nlzfl10 > div');
         const result = [];
-    
+        console.log('TOTAL CHILD >>', parentDiv.length);
         parentDiv.each(function () {
             result.push({
                 product_name: $(this).find('a > div.css-16vw0vn > div.css-11s9vse > span').text(), 
@@ -39,5 +38,58 @@ exports.main = async (req, res) => {
             message: 'Scraping data successful',
             result: result
         });
-    }).catch(console.error);
+    }).catch((error) => {
+        failedLog(req, res, {
+            status: false, message: 'Scraping data failed', debug: error
+        });
+    });
+}
+
+function dynamicScrolling(url) {
+    return new Promise((resolve, reject) => {
+
+        async function autoScroll(page) {
+            await page.evaluate(async () => {
+                await new Promise((resolve, reject) => {
+                    var totalHeight = 0;
+                    var distance = 100;
+                    var timer = setInterval(() => {
+                        var scrollHeight = document.body.scrollHeight;
+                        window.scrollBy(0, distance);
+                        totalHeight += distance;
+        
+                        if(totalHeight >= scrollHeight) {
+                            clearInterval(timer);
+                            resolve();
+                        }
+                    }, 100);
+                });
+            });
+        }
+
+        async function getData(url) {
+            try{
+                const browser = await puppeteer.launch({headless: false});
+                const page = await browser.newPage();
+                await page.goto(url);
+                await page.setViewport({width: 1200, height: 800});
+                await autoScroll(page);
+                await page.waitForSelector('div.css-13l3l78.e1nlzfl10 > div', { 
+                    visible: true, timeout: 1000
+                });
+                const pageContent = await page.content();
+                await browser.close();
+                return pageContent;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        try {
+            const gd = getData(url);
+            resolve(gd);
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
