@@ -2,6 +2,8 @@ const TAG = "controllers.scrape";
 const axios = require('axios');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
+const { parse } = require('json2csv');
+const fs = require('fs');
 const { traceLog, successLog, failedLog } = require("../helpers/logger");
 
 exports.main = async (req, res) => {
@@ -17,7 +19,7 @@ exports.main = async (req, res) => {
     
         parentDiv.each(function () {
             result.push({
-                product: $(this).find('a > div.css-16vw0vn > div.css-11s9vse > span').text(), 
+                product_name: $(this).find('a > div.css-16vw0vn > div.css-11s9vse > span').text(), 
                 description: $(this).find('a > div.css-16vw0vn > div.css-11s9vse span.css-1kr22w3:first-child').text(),
                 image_link: $(this).find('a > div.css-16vw0vn').find('img').attr('src'),
                 price: $(this).find('a > div.css-16vw0vn > div.css-11s9vse span.css-o5uqvq').text(),
@@ -25,6 +27,12 @@ exports.main = async (req, res) => {
                 store_name: $(this).find('a > div.css-16vw0vn > div.css-11s9vse span.css-1kr22w3:last-child').text()
             });
         });
+
+        const fields = ['product_name', 'description', 'image_link', 'price', 'rating', 'store_name'];
+        const opts = { fields };
+        const csv = parse(result, opts);
+        const filePath = './CSV/' + 'result.csv';
+        fs.writeFileSync(filePath, csv);
     
         successLog(req, res, {
             status: true,
