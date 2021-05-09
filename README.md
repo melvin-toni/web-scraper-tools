@@ -14,4 +14,5 @@
 7. Send request and get the result in JSON format and CSV files
 8. CSV file saved inside project folder ```/CSV/result.csv```
 
+![Screenshot](./installer/result-in-csv.jpg?raw=true "Result in CSV")
 ![Screenshot](./installer/postman-example.jpg?raw=true "Postman example")
