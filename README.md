@@ -13,8 +13,9 @@ This project scraping data from ```https://www.tokopedia.com/p/handphone-tablet/
     URL: http://localhost:3010/api/scrape
     Method: POST
 ```
-7. Send request and get the result in JSON format and CSV files
-8. CSV file saved inside project folder ```/CSV/result.csv```
+7. Send request and wait until Postman give back the result
+8. Get the result in JSON format and CSV files
+9. CSV file saved inside project folder ```/CSV/result.csv```
 
 ![Screenshot](./installer/result-in-csv.jpg?raw=true "Result in CSV")
 ![Screenshot](./installer/postman-example.jpg?raw=true "Postman example")
